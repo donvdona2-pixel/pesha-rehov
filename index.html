@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#050c16">
+<title>פשע רחוב: CLAN WARS — דמו משחק</title>
+<style>
+:root{--gold:#ffcf7b;--mint:#56e5d4;--dark:#091019;--edge:rgba(199,223,239,.22)}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#040911;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;touch-action:none}
+button{font-family:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+#phone{position:relative;isolation:isolate;margin:auto;width:100%;height:100dvh;max-width:630px;overflow:hidden;background:#06121c;box-shadow:0 0 80px #000}
+#world{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#vignette{pointer-events:none;position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(1,8,17,.52),transparent 24%,transparent 66%,rgba(0,5,14,.54)),radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.35))}
+#hud{position:absolute;inset:0;z-index:3;pointer-events:none;display:none}
+#hud button,#hud .interactive{pointer-events:auto}
+#topbar{position:absolute;top:max(12px,env(safe-area-inset-top));left:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:9px;direction:ltr}
+#profile{flex:1;max-width:192px;background:linear-gradient(110deg,rgba(9,22,34,.94),rgba(15,34,45,.86));border:1px solid var(--edge);border-radius:13px;padding:9px 10px;box-shadow:0 7px 21px #0007;direction:rtl}
+.eyebrow{font-size:8px;letter-spacing:1.7px;color:#9ec2ce;font-weight:900;direction:ltr;text-align:right}
+#profileName{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:1000;color:#f6f7f7;margin:3px 0}
+#goldCash{font-weight:1000;color:var(--gold);font-size:14px;direction:ltr;text-align:right}
+#healthLine{height:6px;border-radius:9px;background:#172632;overflow:hidden;margin-top:7px;border:1px solid #5060714a}
+#healthFill{width:100%;height:100%;background:linear-gradient(90deg,#fb786a,#f7bd79)}
+#miniBox{position:relative;width:126px;height:132px;padding:4px;border-radius:13px;border:1px solid var(--edge);background:#07111ae8;box-shadow:0 7px 25px #0008;overflow:hidden}
+#mini{width:116px;height:108px;display:block;border-radius:8px}
+#miniLabel{position:absolute;right:7px;bottom:6px;left:7px;display:flex;justify-content:space-between;font-size:8px;font-weight:900;color:#cbecf1;direction:ltr}
+#score{position:absolute;top:calc(max(12px,env(safe-area-inset-top)) + 146px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;min-width:190px;justify-content:center;border:1px solid #ffffff28;background:#061421d9;backdrop-filter:blur(10px);padding:8px 12px;border-radius:13px;box-shadow:0 5px 14px #0006;direction:ltr}
+.scoreTeam{font-weight:1000;font-size:19px}.scoreTeam.blue{color:#5af0ee}.scoreTeam.red{color:#ff7c7e}
+#scoreMid{color:#bdcad3;white-space:nowrap;font-size:10px;letter-spacing:.6px}
+#mission{position:absolute;top:calc(max(12px,env(safe-area-inset-top)) + 193px);left:50%;transform:translateX(-50%);background:#061421ae;padding:5px 10px;border-radius:50px;font-size:10px;white-space:nowrap;border:1px solid #ffffff1b;color:#dcf2e9}
+#toast{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);width:max-content;max-width:90%;text-align:center;background:rgba(8,20,31,.9);border:1px solid rgba(248,194,109,.55);color:#fff;border-radius:13px;padding:12px 16px;font-size:13px;box-shadow:0 12px 40px #000a;opacity:0;transition:opacity .18s;z-index:8;pointer-events:none}
+#bottomHud{position:absolute;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 20px);left:0;right:0;height:174px;direction:ltr}
+#joystick{position:absolute;bottom:14px;left:21px;width:116px;height:116px;background:radial-gradient(circle,rgba(97,206,206,.12),rgba(7,17,27,.66) 65%);border:1px solid #89b4cb51;border-radius:50%;box-shadow:0 0 40px #1fe5d31a,inset 0 0 24px #0008;touch-action:none;pointer-events:auto}
+#joystick:before,#joystick:after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#8cb3c233}#joystick:before{width:1px;height:90%}#joystick:after{height:1px;width:90%}
+#knob{width:53px;height:53px;position:absolute;left:calc(50% - 26.5px);top:calc(50% - 26.5px);border-radius:50%;background:radial-gradient(circle at 35% 32%,#6bc6d9,#1e6071 72%);border:2px solid #84dfdf;box-shadow:0 4px 15px #0009,0 0 17px #60ebdb54;pointer-events:none}
+#actions{position:absolute;right:16px;bottom:0px;display:grid;grid-template-columns:54px 54px 74px;grid-template-rows:61px 76px;gap:5px;align-items:center;justify-items:center}
+.gameBtn{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;border:1px solid #e2eee859;background:linear-gradient(135deg,#162a3cd9,#0b1726d9);color:#f9fafa;border-radius:16px;width:53px;height:53px;box-shadow:0 5px 20px #000a;font-size:18px;font-weight:1000;backdrop-filter:blur(6px);padding:3px}
+.gameBtn small{font-size:9px;letter-spacing:-.3px;white-space:nowrap;font-weight:800}
+.gameBtn:active{transform:scale(.94);filter:brightness(1.3)}
+#fire{grid-column:3;grid-row:1 / 3;width:77px;height:77px;border-radius:50%;font-size:25px;background:radial-gradient(circle at 32% 21%,#c75a52,#8f2533 72%);border:2px solid #ffb2a2;box-shadow:0 0 20px #ed564b4f,0 8px 22px #0009}
+#dog{grid-column:2;grid-row:1}#car{grid-column:1;grid-row:1}#action{grid-column:2;grid-row:2}#shop{grid-column:1;grid-row:2}
+#ammo{position:absolute;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 178px);right:19px;text-align:center;font-size:11px;background:#071523ca;border:1px solid #ffffff28;border-radius:30px;padding:7px 12px;color:#fff}
+#menuBtn{position:absolute;top:calc(max(12px,env(safe-area-inset-top)) + 148px);right:14px;border:1px solid #d5e3e454;background:#0b202ada;pointer-events:auto;padding:6px 10px;border-radius:10px;font-size:12px}
+#intro,#overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(180deg,rgba(2,7,14,.34),rgba(4,8,16,.95) 90%);backdrop-filter:blur(6px)}
+#intro{background:radial-gradient(ellipse at 50% 28%,#29637f31,transparent 60%),linear-gradient(180deg,#040c12d8,#040b14e7 72%)}
+#intro:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 48px,#ffffff06 49px),repeating-linear-gradient(90deg,transparent,transparent 48px,#ffffff05 49px);mask-image:linear-gradient(transparent,#000 55%)}
+.panel{width:min(100%,450px);position:relative;z-index:1;text-align:center;direction:rtl}
+.crest{width:84px;height:84px;margin:0 auto 16px;border:1px solid #e8be71a6;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,#16283c,#0f202e);box-shadow:0 0 48px #e6b6652f,inset 0 0 28px #eece5936;font-size:38px;transform:rotate(-3deg)}
+.kicker{font-size:10px;color:#e6be8b;font-weight:1000;letter-spacing:4px;direction:ltr}
+h1{font-size:clamp(40px,10vw,64px);line-height:.99;margin:13px 0 4px;color:#f5f6f5;font-weight:1000;text-shadow:0 5px 28px #000}
+h1 span{display:block;font-size:21px;color:var(--gold);margin-top:12px;letter-spacing:4px;direction:ltr}
+.desc{font-size:13px;line-height:1.8;color:#c2d3dc;margin:20px auto;max-width:360px}
+.features{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:20px 0 26px}.feature{border:1px solid #cadde036;border-radius:999px;background:#1224339e;font-size:10px;padding:8px 10px;color:#e8ebeb}
+.primary{width:100%;border:1px solid #ffe5b2;border-radius:14px;background:linear-gradient(135deg,#f5d493,#b88b4d);color:#18202b;padding:17px 12px;font-size:16px;font-weight:1000;box-shadow:0 12px 34px #eaa55d40}
+.secondary{width:100%;margin-top:10px;border:1px solid #d3e6e343;border-radius:12px;background:#132735cc;padding:13px;color:#d9e9ee;font-size:13px;font-weight:800}
+.note{font-size:10px;margin-top:19px;color:#8d9eac;line-height:1.5}
+#overlay{display:none;z-index:12;background:#020812db;backdrop-filter:blur(10px)}
+#overlay .panel{background:linear-gradient(135deg,#111f2cf5,#07111ef7);padding:23px 17px 18px;border:1px solid #d0bd9057;border-radius:22px;box-shadow:0 18px 65px #000b;max-height:87vh;overflow:auto}
+#overlay h2{font-size:23px;margin:0 0 9px;color:#f4d7a0}
+#overlay p{color:#cbdae2;font-size:12px;line-height:1.7;margin:8px 0 16px}
+#overlay .secondary{margin-top:8px}
+#overlay .stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border-bottom:1px solid #ffffff1f;font-size:12px;text-align:right}
+#overlay .stat b{color:#f7d69b}
+#overlay .close{margin-top:15px;color:#93cad3}
+#overlay .input{width:100%;padding:12px;border-radius:10px;background:#0b141d;border:1px solid #d7e5eb57;color:white;user-select:text;-webkit-user-select:text;font-size:14px;direction:rtl}
+#modeTag{margin:4px 0 10px;font-size:11px;color:#9dd5de}
+footer{position:absolute;bottom:calc(max(7px,env(safe-area-inset-bottom)) + 2px);left:0;right:0;z-index:2;text-align:center;pointer-events:none;color:#99b5bb74;font-size:9px;letter-spacing:.7px;direction:ltr}
+@media(max-width:370px){#miniBox{width:112px;height:120px}#mini{width:102px;height:96px}#profile{max-width:159px}#joystick{width:103px;height:103px;bottom:12px;left:16px}#actions{right:9px;gap:3px;grid-template-columns:49px 49px 68px}#fire{width:68px;height:68px}.gameBtn{width:48px;height:48px}#bottomHud{height:157px}}
+@media(min-width:700px){#phone{height:min(100dvh,920px);border-left:1px solid #283d4a;border-right:1px solid #283d4a}}
+</style>
+</head>
+<body>
+<div id="phone">
+<canvas id="world" aria-label="מפת העיר והקרב"></canvas><div id="vignette"></div>
+<div id="hud">
+<div id="topbar"><div id="profile"><div class="eyebrow">STREET EMPIRE • PLAYER 01</div><div id="profileName">♛ מאוריציו <span style="font-size:9px;color:#92cad5" id="level">LVL 1</span></div><div id="goldCash">$ 2,000</div><div id="healthLine"><div id="healthFill"></div></div></div><div id="miniBox"><canvas id="mini" width="232" height="216"></canvas><div id="miniLabel"><span>LIVE CITY</span><span id="zone">DOWNTOWN</span></div></div></div>
+<div id="score"><span class="scoreTeam blue" id="blueScore">0</span><span id="scoreMid">6 VS 6 · <span id="time">04:00</span></span><span class="scoreTeam red" id="redScore">0</span></div>
+<div id="mission">🎯 השתלטו על הרחובות</div><button id="menuBtn">☰ תפריט</button>
+<div id="toast"></div>
+<div id="ammo">🔫 <span id="ammoText">18 / ∞</span> · <span id="weaponText">אקדח</span></div>
+<div id="bottomHud"><div id="joystick"><div id="knob"></div></div><div id="actions"><button id="dog" class="gameBtn"><span>🐕</span><small>תקיפה</small></button><button id="car" class="gameBtn"><span>🚘</span><small>רכב</small></button><button id="fire" class="gameBtn"><span>⌖</span><small>ירי</small></button><button id="shop" class="gameBtn"><span>⚙️</span><small>ציוד</small></button><button id="action" class="gameBtn"><span>💰</span><small>פעולה</small></button></div></div>
+</div>
+<div id="intro"><div class="panel"><div class="crest">♛</div><div class="kicker">NEW MOBILE CRIME UNIVERSE</div><h1>פשע רחוב <span>CLAN WARS</span></h1><div class="desc">העיר שייכת לחזקים. בנה אימפריה, צא לקרב קלאנים, פקד על הכלב שלך, סע ברחובות והשתלט על הקזינו.</div><div class="features"><span class="feature">⚔️ 6 נגד 6</span><span class="feature">🐕 כלב תקיפה</span><span class="feature">🚘 נהיגה</span><span class="feature">🏙️ עיר חופשית</span><span class="feature">💎 שוד קזינו</span></div><button class="primary" id="startBattle">⚡ התחל קרב 6 נגד 6</button><button class="secondary" id="startExplore">🌃 סיור חופשי בעיר</button><div class="note">גרסת הדגמה אינטראקטיבית • כרגע משחקים נגד בוטים, לא מול אנשים אמיתיים • כסף ופעילויות במשחק בלבד</div></div></div>
+<div id="overlay"><div id="overlayContent" class="panel"></div></div>
+<footer>PROTOTYPE • NOT AN ONLINE SERVER • NO REAL-MONEY GAMBLING</footer>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), cvs=$('world'), ctx=cvs.getContext('2d',{alpha:false}), mini=$('mini'), mc=mini.getContext('2d');
+let sw=0,sh=0,dpr=1,playing=false,mode='battle',over=false,prev=0,gameTime=240,timePassed=0,blueScore=0,redScore=0;
+const WORLD={w:2600,h:2050}, vRoads=[280,790,1300,1810,2320], hRoads=[250,745,1240,1735], roadW=146;
+const structures=[], trees=[],lights=[],decor=[],cars=[],actors=[],particles=[],bullets=[];
+let player,dog,aimTarget=null,cam={x:1300,y:1240}, joy={x:0,y:0,pointer:null},keys={},shooting=false,displayToastUntil=0,toastTimer=0,heist=null,selectedMode='battle',lastAutosave=0;
+const defaultSave={cash:2000,xp:0,level:1,weapon:'pistol',owned:['pistol'],dogName:'רוקי',wins:0,kills:0};
+let save;try{save={...defaultSave,...JSON.parse(localStorage.getItem('pesha_rehov_clan_v1')||'{}')}}catch{save={...defaultSave}}
+save.owned=Array.isArray(save.owned)?save.owned:['pistol'];
+const weapons={pistol:{name:'אקדח',damage:21,delay:.32,mag:18,reload:1.25,range:405,spread:.065},smg:{name:'SMG',damage:12,delay:.105,mag:36,reload:1.8,range:370,spread:.11},rifle:{name:'רובה סער',damage:26,delay:.19,mag:30,reload:1.8,range:520,spread:.04}};
+const rnd=(a,b)=>a+Math.random()*(b-a),clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),money=n=>'$ '+Math.floor(n).toLocaleString('en-US');
+const hash=(a,b)=>(Math.sin(a*127.1+b*311.7)*43758.5453)%1;
+const fixedRand=(a,b)=>Math.abs(hash(a,b));
+function resize(){const rect=$('phone').getBoundingClientRect();sw=rect.width;sh=rect.height;dpr=Math.min(devicePixelRatio||1,2);cvs.width=Math.floor(sw*dpr);cvs.height=Math.floor(sh*dpr);cvs.style.width=sw+'px';cvs.style.height=sh+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+function saveNow(){try{localStorage.setItem('pesha_rehov_clan_v1',JSON.stringify(save))}catch{}}
+function toast(s,seconds=2){$('toast').textContent=s;$('toast').style.opacity=1;displayToastUntil=performance.now()+seconds*1000}
+function addXP(x){save.xp+=x;let req=save.level*120;if(save.xp>=req){save.xp-=req;save.level++;toast('🏆 עלית לדרגה '+save.level+'!');}$('level').textContent='LVL '+save.level;saveNow()}
+function addCash(x){save.cash+=x;$('goldCash').textContent=money(save.cash);saveNow()}
+function buildCity(){structures.length=0;trees.length=0;lights.length=0;decor.length=0;cars.length=0;
+  for(let yi=0;yi<=hRoads.length;yi++)for(let xi=0;xi<=vRoads.length;xi++){
+    const minX=xi===0?25:vRoads[xi-1]+roadW/2+25,maxX=xi===vRoads.length?WORLD.w-25:vRoads[xi]-roadW/2-25;
+    const minY=yi===0?25:hRoads[yi-1]+roadW/2+25,maxY=yi===hRoads.length?WORLD.h-25:hRoads[yi]-roadW/2-25;
+    if(maxX-minX<170||maxY-minY<150)continue;
+    const x=minX+18,y=minY+17,w=maxX-minX-36,h=maxY-minY-34;
+    const house=(xi===2&&yi===2),casino=(xi===3&&yi===2),armory=(xi===1&&yi===2);
+    const list=['APARTMENTS','ROOFTOP','GARAGE','MOTEL 77','NEON CLUB','WAREHOUSE','HIGHRISE','LOFT','MARKET'];
+    const label=house?'SAFEHOUSE':casino?'ROYAL CASINO':armory?'ARMORY':list[Math.floor(fixedRand(xi,yi)*list.length)];
+    const tint=casino?'#583650':house?'#21475b':armory?'#524636':['#28404e','#23394a','#36424c','#3c3648','#253e48'][Math.floor(fixedRand(xi+4,yi)*5)];
+    structures.push({x,y,w,h,house,casino,armory,label,tint,seed:fixedRand(xi+3,yi+8)});
+    for(let j=0;j<3;j++){const tx=minX+9+j*10,ty=minY+15+(j%2)*90;trees.push({x:tx,y:ty,r:11+j%2*2})}
+    lights.push({x:minX-17,y:minY-15});lights.push({x:maxX+12,y:maxY+11});
+  }
+  cars.push({x:890,y:1240,ang:0,col:'#f8c56f',driveable:true,active:false},{x:1450,y:1240,ang:Math.PI,col:'#e2696f',driveable:false},{x:790,y:370,ang:Math.PI/2,col:'#65cbd2',driveable:false},{x:1810,y:1010,ang:Math.PI/2,col:'#aabfe7',driveable:false},{x:2285,y:1240,ang:0,col:'#6d7bd7',driveable:false});
+  for(let i=0;i<48;i++){let x=rnd(40,WORLD.w-40),y=rnd(40,WORLD.h-40);if(isRoad(x,y))decor.push({x,y,k:Math.random()})}
+}
+function isRoad(x,y){return vRoads.some(a=>Math.abs(a-x)<roadW/2)||hRoads.some(a=>Math.abs(a-y)<roadW/2)}
+function blocked(x,y,r=17){if(x<r||y<r||x>WORLD.w-r||y>WORLD.h-r)return true;return structures.some(b=>x>b.x-r&&x<b.x+b.w+r&&y>b.y-r&&y<b.y+b.h+r)}
+function nearFeature(feature){let out=null,best=99999;for(const b of structures){if(!b[feature])continue;const px=clamp(player.x,b.x,b.x+b.w),py=clamp(player.y,b.y,b.y+b.h),d=Math.hypot(player.x-px,player.y-py);if(d<best){best=d;out=b}}return best<145?out:null}
+function spawnActor(team,id,xx,yy){let x=xx,y=yy;if(!Number.isFinite(x)){for(let k=0;k<200;k++){x=vRoads[Math.floor(rnd(0,vRoads.length))]+rnd(-43,43);y=hRoads[Math.floor(rnd(0,hRoads.length))]+rnd(-43,43);if(!blocked(x,y,19))break}}
+ const actor={x,y,team,id,ang:0,hp:100,maxHp:100,dead:0,fireCD:rnd(.3,1.1),think:rnd(0,.5),moveX:0,moveY:0,stun:0,kills:0};actors.push(actor);return actor}
+function reset(newMode){mode=newMode;playing=true;over=false;gameTime=240;timePassed=0;blueScore=0;redScore=0;heist=null;bullets.length=0;particles.length=0;actors.length=0;shooting=false;joy.x=joy.y=0;carExit();
+ cars[0].x=890;cars[0].y=1240;cars[0].ang=0;cars[0].active=false;player=spawnActor(0,0,795,1237);player.isPlayer=true;player.ammo=weapons[save.weapon].mag;player.reload=0;player.fireCD=0;player.maxHp=100;player.hp=100;player.ang=-.6;
+ for(let i=1;i<6;i++)spawnActor(0,i,790+rnd(-65,65),1240+rnd(-70,65));
+ for(let i=0;i<6;i++)spawnActor(1,i,1810+rnd(-68,70),1240+rnd(-65,75));
+ dog={x:player.x-30,y:player.y+37,ang:0,state:'follow',target:null,attackCD:0,leap:0,hp:100};aimTarget=null;cam.x=player.x;cam.y=player.y;
+ $('intro').style.display='none';$('hud').style.display='block';$('overlay').style.display='none';$('blueScore').textContent='0';$('redScore').textContent='0';$('scoreMid').innerHTML=mode==='battle'?'6 VS 6 · <span id="time">04:00</span>':'FREE ROAM';$('mission').textContent=mode==='battle'?'🎯 הבס את הקלאן היריב':'🌃 חקור את העיר · סמן אויב בלחיצה';$('level').textContent='LVL '+save.level;$('goldCash').textContent=money(save.cash);toast(mode==='battle'?'⚔️ הקרב התחיל — 6 נגד 6':'🌃 ברוך הבא לעיר!');
+}
+function carExit(){if(player&&player.inCar){const c=player.inCar;c.active=false;player.inCar=null;const a=c.ang;player.x=clamp(c.x-Math.sin(a)*56,28,WORLD.w-28);player.y=clamp(c.y+Math.cos(a)*56,28,WORLD.h-28);if(blocked(player.x,player.y,18)){player.x=c.x+50;player.y=c.y+50}}}
+function driveAction(){if(player.inCar){carExit();toast('יצאת מהרכב');return}let candidate=cars.find(c=>c.driveable&&dist(player,c)<100);if(candidate){player.inCar=candidate;candidate.active=true;candidate.ang=player.ang;dog.x=player.x;dog.y=player.y;toast('🚘 מצב נהיגה · השתמש בג׳ויסטיק')}else toast('🚘 התקרב לרכב הזהוב כדי לנהוג')}
+function dogAttack(){if(player.inCar){toast('🐕 צא מהרכב כדי לתת פקודה');return}if(dog.attackCD>0){toast('🐕 '+save.dogName+' צריך לנוח עוד '+Math.ceil(dog.attackCD)+' שניות');return}
+ let enemies=actors.filter(a=>a.team===1&&a.dead<=0&&a.hp>0),target=aimTarget&&aimTarget.hp>0&&aimTarget.dead<=0?aimTarget:null;
+ if(!target||dist(target,dog)>550)target=enemies.sort((a,b)=>dist(a,dog)-dist(b,dog))[0];if(!target||dist(target,dog)>560){toast('🐕 אין אויב בטווח הפקודה');return}
+ dog.target=target;dog.state='attack';dog.attackCD=8;dog.leap=0;toast('🐕 '+save.dogName+' — תקוף!');}
+function myWeapon(){return weapons[save.weapon]||weapons.pistol}
+function firePlayer(){if(player.dead>0||player.inCar||player.reload>0)return;const w=myWeapon();if(player.fireCD>0)return;if(player.ammo<=0){player.reload=w.reload;toast('🔄 טוען מחסנית...',1);return}
+ const enemies=actors.filter(a=>a.team===1&&a.dead<=0&&a.hp>0);let target=aimTarget&&aimTarget.hp>0&&dist(aimTarget,player)<w.range?aimTarget:enemies.filter(a=>dist(a,player)<w.range).sort((a,b)=>dist(a,player)-dist(b,player))[0];
+ let a=target?Math.atan2(target.y-player.y,target.x-player.x):player.ang;if(target)player.ang=a;
+ makeShot(player,a+rnd(-w.spread,w.spread),w.damage,w.range,0);player.ammo--;player.fireCD=w.delay;if(player.ammo===0)player.reload=w.reload;
+}
+function makeShot(origin,a,damage,range,team){let x=origin.x+Math.cos(a)*25,y=origin.y+Math.sin(a)*25;bullets.push({x,y,lastX:x,lastY:y,dx:Math.cos(a)*990,dy:Math.sin(a)*990,life:range/990,team,damage,owner:origin});for(let i=0;i<5;i++)particles.push({x,y,vx:Math.cos(a)*rnd(28,120)+rnd(-55,55),vy:Math.sin(a)*rnd(28,120)+rnd(-55,55),life:rnd(.06,.22),max:.22,col:'#ffeaa0',r:rnd(1.5,4.5)});}
+function hitActor(victim,dmg,attacker){if(victim.dead>0)return;victim.hp=Math.max(0,victim.hp-dmg);for(let i=0;i<8;i++)particles.push({x:victim.x,y:victim.y,vx:rnd(-100,100),vy:rnd(-100,100),life:rnd(.15,.48),max:.5,col:victim.team===0?'#46f0dc':'#ff686d',r:rnd(1,3.5)});
+ if(victim.hp<=0){victim.dead=4.2;if(victim.team===1){blueScore++;if(attacker===player){save.kills++;addCash(140);addXP(35);toast('💥 חיסול! +$140 · +35XP',1.3)}}else redScore++;
+ $('blueScore').textContent=blueScore;$('redScore').textContent=redScore;
+ if(victim===player){if(heist){heist=null;$('mission').textContent='❌ השוד נכשל — נסה שוב';toast('🚨 השוד נכשל! תחזור לקזינו',2)}else toast('💔 נפלת בקרב — חוזר בעוד רגע');player.inCar&&carExit()}
+ if(mode==='battle'&&(blueScore>=30||redScore>=30))finish(blueScore>redScore);
+ }}
+function finish(win){if(over)return;over=true;shooting=false;if(win){save.wins++;addCash(3000);addXP(200)}saveNow();openOverlay('<h2>'+(win?'🏆 ניצחון הקלאן!':'⚔️ הקרב הסתיים')+'</h2><p>'+(win?'כבשתם את הרחובות! בונוס ניצחון: $3,000 ו-200 XP.':'הקלאן היריב ניצח הפעם. אפשר להתארגן ולחזור לקרב.')+'</p><div class="stat"><span>הקלאן שלך</span><b>'+blueScore+'</b></div><div class="stat"><span>הקלאן היריב</span><b>'+redScore+'</b></div><button class="primary" data-act="battle">🔁 קרב חדש</button><button class="secondary" data-act="explore">🌃 סיור חופשי</button>')}
+function interact(){if(heist){toast('🚨 שוד מתבצע! הגן על האזור');return}const house=nearFeature('house'),casino=nearFeature('casino'),armory=nearFeature('armory');if(house){openHome();return}if(casino){openCasino();return}if(armory){openShop();return}
+ const pkg=decor.find(d=>d.k>.82&&dist(d,player)<66&&!d.taken);if(pkg){pkg.taken=true;addCash(350);addXP(10);toast('📦 משלוח רחוב — +$350');return}
+ toast('💡 התקרב לקזינו, לבית, לנשקייה או לחבילה 📦')}
+function openOverlay(html){$('overlayContent').innerHTML=html+'<button class="secondary close" data-act="close">✕ חזרה למשחק</button>';$('overlay').style.display='flex';shooting=false;joy.x=joy.y=0;}
+function closeOverlay(){$('overlay').style.display='none'}
+function openHome(){openOverlay('<h2>🏠 הבית שלך</h2><p>ברוך הבא לבסיס הקלאן. כאן אפשר לרפא את הדמות, להתאים את הכלב ולשמור את ההתקדמות.</p><div class="stat"><span>בעל הנכס</span><b>מאוריציו ♛</b></div><div class="stat"><span>כלב שמירה</span><b>'+escapeHtml(save.dogName)+'</b></div><div class="stat"><span>רמה</span><b>'+save.level+'</b></div><button class="primary" data-act="heal">❤️ התאוששות מלאה · $250</button><button class="secondary" data-act="rename">🐕 בחר שם לכלב</button>')}
+function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+function openShop(){let s='<h2>🔫 נשקיית הרחוב</h2><p>בחר ציוד לקראת המפגש הבא. פריטים וירטואליים בלבד.</p><div class="stat"><span>יתרה</span><b>'+money(save.cash)+'</b></div>';for(const [id,w,cost] of [['pistol',weapons.pistol,0],['smg',weapons.smg,1400],['rifle',weapons.rifle,3500]])s+='<button class="secondary" data-act="weapon" data-weapon="'+id+'">'+(save.weapon===id?'✅ ':'')+w.name+' · '+(save.owned.includes(id)?'בבעלותך':(cost?money(cost):'חינם'))+'</button>';openOverlay(s)}
+function openCasino(){openOverlay('<h2>♛ ROYAL CASINO</h2><p>הלילה יש שתי דרכים להשאיר חותם: משימת שוד קזינו בדיונית, או משחק מזל במטבעות משחק בלבד.</p><button class="primary" data-act="heist">💎 שוד הכספת · פרס $12,000</button><button class="secondary" data-act="spin">🎰 סיבוב מזל · 100 מטבעות משחק</button><div class="note">אין כסף אמיתי, הימורים בכסף אמיתי או פרסים הניתנים לפדיון.</div>')}
+function startHeist(){if(heist)return;heist={time:22,started:true};closeOverlay();toast('🚨 שוד הקזינו התחיל! החזק מעמד 22 שניות',3);$('mission').textContent='💎 הגן על שוד הקזינו · 22 שניות';for(let i=0;i<2;i++)spawnActor(1,6+i,1810+rnd(-30,30),1240+rnd(-40,40))}
+function spend(n){if(save.cash<n){toast('💸 אין מספיק כסף במשחק');return false}addCash(-n);return true}
+$('overlay').addEventListener('click',e=>{let b=e.target.closest('button[data-act]');if(!b)return;const a=b.dataset.act;if(a==='close')closeOverlay();if(a==='battle')reset('battle');if(a==='explore')reset('explore');if(a==='heal'){if(spend(250)){player.hp=100;closeOverlay();toast('❤️ הבריאות שוחזרה')}}if(a==='rename'){openOverlay('<h2>🐕 שם לכלב שלך</h2><p>בחר שם לחבר הכי נאמן ברחובות.</p><input class="input" id="dogInput" maxlength="18" placeholder="שם הכלב" value="'+escapeHtml(save.dogName)+'"><button class="primary" data-act="saveDog">שמור שם</button>')}if(a==='saveDog'){save.dogName=($('dogInput')?.value||'רוקי').trim().slice(0,18)||'רוקי';saveNow();closeOverlay();toast('🐕 הכירו את '+save.dogName)}if(a==='weapon'){const id=b.dataset.weapon,cost=id==='smg'?1400:id==='rifle'?3500:0;if(save.weapon===id){closeOverlay();return}if(spend(save.owned.includes(id)?0:cost)){if(!save.owned.includes(id))save.owned.push(id);save.weapon=id;player.ammo=weapons[id].mag;player.reload=0;saveNow();closeOverlay();toast('🔫 מצויד ב'+weapons[id].name)}}if(a==='heist')startHeist();if(a==='spin'){if(!spend(100))return;let prize=[0,0,50,150,250,500][Math.floor(Math.random()*6)];addCash(prize);openOverlay('<h2>🎰 תוצאת הסיבוב</h2><p>'+(['לא זכית הפעם','זכית ב-'+money(prize)][+(prize>0)])+'</p><button class="primary" data-act="casinoAgain">חזור לקזינו</button>')}if(a==='casinoAgain')openCasino();if(a==='menu'){closeOverlay()}});
+function showMenu(){openOverlay('<h2>♛ פשע רחוב</h2><p>CLAN WARS — הדגמת משחק לטלפון</p><div class="stat"><span>דרגה</span><b>'+save.level+'</b></div><div class="stat"><span>הון משחק</span><b>'+money(save.cash)+'</b></div><div class="stat"><span>ניצחונות</span><b>'+save.wins+'</b></div><div class="stat"><span>חיסולים</span><b>'+save.kills+'</b></div><button class="primary" data-act="battle">⚔️ קרב 6 נגד 6 חדש</button><button class="secondary" data-act="explore">🌃 עולם פתוח</button><button class="secondary" data-act="weapon" data-weapon="'+save.weapon+'">🔫 חזור עם הנשק שלי</button><div class="note">שחקנים אחרים הם בוטים, ולא חיבור רשת אמיתי. הגרסה המלאה תידרש למנוע משחק ולשרתים.</div>')}
+$('startBattle').onclick=()=>reset('battle');$('startExplore').onclick=()=>reset('explore');$('menuBtn').onclick=showMenu;$('dog').onclick=dogAttack;$('car').onclick=driveAction;$('action').onclick=interact;$('shop').onclick=openShop;
+$('fire').addEventListener('pointerdown',e=>{e.preventDefault();shooting=true;firePlayer();$('fire').setPointerCapture(e.pointerId)});for(const evt of ['pointerup','pointercancel','lostpointercapture'])$('fire').addEventListener(evt,()=>shooting=false);
+const stick=$('joystick'),knob=$('knob');function setJoy(e){const r=stick.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,max=r.width*.33,len=Math.hypot(x,y)||1,k=Math.min(len,max)/len;joy.x=x*k/max;joy.y=y*k/max;knob.style.transform='translate('+(joy.x*max)+'px,'+(joy.y*max)+'px)'}function stopJoy(){joy.x=joy.y=0;joy.pointer=null;knob.style.transform='translate(0,0)'}
+stick.addEventListener('pointerdown',e=>{e.preventDefault();joy.pointer=e.pointerId;stick.setPointerCapture(e.pointerId);setJoy(e)});stick.addEventListener('pointermove',e=>{if(joy.pointer===e.pointerId)setJoy(e)});for(const evt of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(evt,stopJoy);
+addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(!playing||$('overlay').style.display==='flex')return;if(e.code==='KeyE')interact();if(e.code==='KeyF')driveAction();if(e.code==='KeyQ')dogAttack();if(e.code==='KeyB')openShop();if(e.code==='Escape')showMenu();});addEventListener('keyup',e=>{keys[e.code]=false});
+cvs.addEventListener('pointerdown',e=>{if(!playing||$('overlay').style.display==='flex')return;const r=cvs.getBoundingClientRect();let wx=cam.x+(e.clientX-r.left-sw/2),wy=cam.y+(e.clientY-r.top-sh/2);let found=actors.filter(a=>a.team===1&&a.dead<=0&&dist(a,{x:wx,y:wy})<38).sort((a,b)=>dist(a,{x:wx,y:wy})-dist(b,{x:wx,y:wy}))[0];if(found){aimTarget=found;toast('🎯 אויב סומן למטרה',.8)}});
+function move(obj,dx,dy,dt,speed,r=17){const nx=obj.x+dx*dt*speed,ny=obj.y+dy*dt*speed;if(!blocked(nx,obj.y,r))obj.x=nx;if(!blocked(obj.x,ny,r))obj.y=ny}
+function update(dt){if(!playing||$('overlay').style.display==='flex'||over)return;
+ timePassed+=dt;if(mode==='battle'){gameTime-=dt;$('time').textContent=Math.floor(Math.max(gameTime,0)/60).toString().padStart(2,'0')+':'+Math.floor(Math.max(gameTime,0)%60).toString().padStart(2,'0');if(gameTime<=0){finish(blueScore>=redScore);return}}
+ if(displayToastUntil&&performance.now()>displayToastUntil){$('toast').style.opacity=0;displayToastUntil=0}
+ let mx=joy.x+((keys['KeyD']||keys['ArrowRight'])?1:0)-((keys['KeyA']||keys['ArrowLeft'])?1:0),my=joy.y+((keys['KeyS']||keys['ArrowDown'])?1:0)-((keys['KeyW']||keys['ArrowUp'])?1:0);const l=Math.hypot(mx,my);if(l>1){mx/=l;my/=l}
+ if(player.dead>0){player.dead-=dt;if(player.dead<=0){player.hp=100;player.x=790+rnd(-35,35);player.y=1240+rnd(-35,35);player.reload=0;player.ammo=myWeapon().mag;toast('❤️ חזרת לקרב')}}else{
+  if(player.inCar){const c=player.inCar;let speed=440;move(c,mx,my,dt,speed,24);c.ang=l>.12?Math.atan2(my,mx):c.ang;player.x=c.x;player.y=c.y;player.ang=c.ang}
+  else{move(player,mx,my,dt,220,16);if(l>.1)player.ang=Math.atan2(my,mx)}
+  if(player.fireCD>0)player.fireCD-=dt;
+  if(player.reload>0){player.reload-=dt;if(player.reload<=0){player.ammo=myWeapon().mag;toast('✅ נטען',.6)}}
+  if(shooting||keys['Space'])firePlayer();
+ }
+ for(let i=0;i<actors.length;i++){let a=actors[i];if(a===player)continue;
+  if(a.dead>0){a.dead-=dt;if(a.dead<=0){a.hp=100;let x=a.team===0?790:1810;a.x=x+rnd(-58,58);a.y=1240+rnd(-65,65);a.stun=0}continue}
+  if(a.stun>0){a.stun-=dt;continue}
+  a.think-=dt;a.fireCD-=dt;let enemies=actors.filter(b=>b.team!==a.team&&b.dead<=0&&b.hp>0);let target=enemies.sort((x,y)=>dist(x,a)-dist(y,a))[0];if(mode==='explore'&&target&&dist(a,target)>430)target=null;let dx=0,dy=0;
+  if(target){let d=dist(a,target),theta=Math.atan2(target.y-a.y,target.x-a.x);a.ang=theta;
+   if(d>245){dx=Math.cos(theta);dy=Math.sin(theta)}else if(d<105){dx=-Math.cos(theta)*.4;dy=-Math.sin(theta)*.4}else{dx=Math.cos(theta+Math.PI/2)*.36;dy=Math.sin(theta+Math.PI/2)*.36}
+   if(d<440&&a.fireCD<=0){makeShot(a,theta+rnd(-.18,.18),rnd(8,14),420,a.team);a.fireCD=rnd(.49,.96)}
+  }else if(a.think<0){a.moveX=rnd(-1,1);a.moveY=rnd(-1,1);a.think=rnd(1,3)}
+  const ml=Math.hypot(dx,dy)||1;move(a,dx/ml,dy/ml,dt,119,16)
+ }
+ if(dog.attackCD>0)dog.attackCD-=dt;
+ if(dog.state==='attack'&&dog.target&&dog.target.dead<=0){let t=dog.target,d=dist(dog,t),ang=Math.atan2(t.y-dog.y,t.x-dog.x);dog.ang=ang;move(dog,Math.cos(ang),Math.sin(ang),dt,360,10);if(d<33){hitActor(t,44,player);t.stun=2;dog.state='follow';dog.target=null;toast('🐕 '+save.dogName+' פגע באויב!')}}
+ else{dog.state='follow';let goal={x:player.x-36,y:player.y+33},d=dist(dog,goal);if(d>370){dog.x=goal.x;dog.y=goal.y}else if(d>34){let ang=Math.atan2(goal.y-dog.y,goal.x-dog.x);dog.ang=ang;move(dog,Math.cos(ang),Math.sin(ang),dt,player.inCar?440:260,10)}}
+ for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.lastX=b.x;b.lastY=b.y;b.x+=b.dx*dt;b.y+=b.dy*dt;b.life-=dt;let targets=actors.filter(a=>a.team!==b.team&&a.dead<=0);let target=targets.find(a=>Math.hypot(a.x-b.x,a.y-b.y)<22);if(target){hitActor(target,b.damage,b.owner);b.life=0;}
+ if(blocked(b.x,b.y,2)){for(let k=0;k<3;k++)particles.push({x:b.x,y:b.y,vx:rnd(-40,40),vy:rnd(-40,40),life:rnd(.15,.3),max:.3,col:'#d9eeec',r:1.5});b.life=0}if(b.life<=0)bullets.splice(i,1)}
+ for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;if(p.life<=0)particles.splice(i,1)}
+ if(heist){heist.time-=dt;$('mission').textContent='💎 שוד הקזינו · '+Math.ceil(heist.time)+' שניות';if(heist.time<=0){heist=null;addCash(12000);addXP(160);toast('💎 הכספת נפרצה! +$12,000',4);$('mission').textContent='🏆 משימת שוד הושלמה'}}
+ cam.x+=(player.x-cam.x)*Math.min(1,dt*6.7);cam.y+=(player.y-cam.y)*Math.min(1,dt*6.7);
+ $('healthFill').style.width=(player.hp/player.maxHp*100)+'%';$('ammoText').textContent=(player.reload>0?'טוען...':player.ammo)+' / ∞';$('weaponText').textContent=myWeapon().name;
+ if(timePassed-lastAutosave>9){saveNow();lastAutosave=timePassed}
+}
+function view(x,y){return{x:x-cam.x+sw/2,y:y-cam.y+sh/2}}
+function rounded(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function screenLine(x1,y1,x2,y2,color,width=1){const a=view(x1,y1),b=view(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+function drawCity(){const start=view(0,0);ctx.fillStyle='#101d26';ctx.fillRect(0,0,sw,sh);ctx.save();ctx.translate(start.x,start.y);
+ ctx.fillStyle='#192930';ctx.fillRect(0,0,WORLD.w,WORLD.h);
+ // Blocks and pavement
+ for(const b of structures){if(b.x+b.w<cam.x-sw/2-160||b.x>cam.x+sw/2+160||b.y+b.h<cam.y-sh/2-160||b.y>cam.y+sh/2+160)continue;
+  ctx.fillStyle='#435058';ctx.fillRect(b.x-17,b.y-17,b.w+34,b.h+34);ctx.fillStyle='#293943';ctx.fillRect(b.x-12,b.y-12,b.w+24,b.h+24);
+ }
+ for(const x of vRoads){ctx.fillStyle='#202b36';ctx.fillRect(x-roadW/2,0,roadW,WORLD.h);ctx.fillStyle='#101a25';ctx.fillRect(x-roadW/2+9,0,3,WORLD.h);ctx.fillRect(x+roadW/2-12,0,3,WORLD.h);
+  ctx.setLineDash([31,24]);ctx.strokeStyle='#b7c5c042';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,WORLD.h);ctx.stroke();ctx.setLineDash([])}
+ for(const y of hRoads){ctx.fillStyle='#202b36';ctx.fillRect(0,y-roadW/2,WORLD.w,roadW);ctx.fillStyle='#101a25';ctx.fillRect(0,y-roadW/2+8,WORLD.w,3);ctx.fillRect(0,y+roadW/2-11,WORLD.w,3);
+  ctx.setLineDash([31,24]);ctx.strokeStyle='#b7c5c042';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(WORLD.w,y);ctx.stroke();ctx.setLineDash([])}
+ // Crosswalk marks, sewer covers
+ for(const x of vRoads)for(const y of hRoads){ctx.fillStyle='#f5f2de33';for(let i=-3;i<=3;i++){ctx.fillRect(x-roadW/2+18+i*17,y-roadW/2+14,9,15);ctx.fillRect(x-roadW/2+18+i*17,y+roadW/2-29,9,15)}ctx.strokeStyle='#060b1366';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+36,y+34,9,0,Math.PI*2);ctx.stroke()}
+ // buildings
+ for(const b of structures){if(b.x+b.w<cam.x-sw/2-160||b.x>cam.x+sw/2+160||b.y+b.h<cam.y-sh/2-160||b.y>cam.y+sh/2+160)continue;
+  let {x,y,w,h}=b;ctx.fillStyle='#0008';ctx.fillRect(x+19,y+21,w,h);ctx.fillStyle='#0d1923';ctx.fillRect(x+7,y+12,w,h);ctx.fillStyle=b.tint;ctx.fillRect(x,y,w,h);ctx.fillStyle='#ffffff12';ctx.fillRect(x+6,y+6,w-12,6);ctx.fillStyle='#0006';ctx.fillRect(x+7,y+h-16,w-14,10);ctx.strokeStyle=b.casino?'#ff76c9bb':b.house?'#59dce2bb':'#536d794f';ctx.lineWidth=b.casino||b.house?3:1;ctx.strokeRect(x+3,y+3,w-6,h-6);
+  // rooftop units
+  ctx.fillStyle='#101f2aaf';ctx.fillRect(x+23,y+24,w*.31,35);ctx.fillRect(x+w*.65,y+h*.52,w*.2,27);
+  ctx.strokeStyle='#82a8b649';ctx.strokeRect(x+25,y+27,w*.31-4,29);
+  for(let a=0;a<3;a++){ctx.fillStyle=(a%2?'#9ce2ed':'#e6b371')+'55';ctx.fillRect(x+17+a*42,y+h-38,18,4)}
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold '+(b.casino?18:13)+'px Arial';ctx.shadowColor=b.casino?'#ff55ce':b.house?'#4cd6e4':'#8fc9d4';ctx.shadowBlur=b.casino?18:6;ctx.fillStyle=b.casino?'#ffc1eb':b.house?'#8ef5ff':'#d1dfda';ctx.fillText(b.label,x+w/2,y+h/2,Math.max(65,w-12));ctx.restore();
+  if(b.casino||b.house||b.armory){let sym=b.casino?'♛':b.house?'⌂':'◈';ctx.font='bold 35px Arial';ctx.fillStyle=b.casino?'#ffda7a':b.house?'#9cefff':'#f3d5ac';ctx.textAlign='center';ctx.fillText(sym,x+w/2,y+h/2-27);
+   ctx.strokeStyle=b.casino?'#ffd67b':b.house?'#70eff2':'#ffc477';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+w/2,y+h+25,20+Math.sin(timePassed*3)*2,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#ebf9f1';ctx.font='bold 12px Arial';ctx.fillText('E',x+w/2,y+h+29)}
+ }
+ for(const t of trees){ctx.fillStyle='#03090b88';ctx.beginPath();ctx.ellipse(t.x+6,t.y+7,t.r+2,t.r*.65,0,0,7);ctx.fill();ctx.fillStyle='#203d3d';ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,7);ctx.fill();ctx.fillStyle='#3c6860';ctx.beginPath();ctx.arc(t.x-3,t.y-3,t.r*.62,0,7);ctx.fill()}
+ for(const l of lights){ctx.fillStyle='#d9bb817a';ctx.beginPath();ctx.arc(l.x,l.y,22,0,7);ctx.fill();ctx.fillStyle='#ffe2a6';ctx.beginPath();ctx.arc(l.x,l.y,3,0,7);ctx.fill()}
+ for(const d of decor){if(d.taken||d.x<cam.x-sw/2-50||d.x>cam.x+sw/2+50||d.y<cam.y-sh/2-50||d.y>cam.y+sh/2+50)continue;if(d.k>.82){ctx.fillStyle='#b8914b';ctx.fillRect(d.x-8,d.y-8,16,16);ctx.strokeStyle='#ffde83';ctx.lineWidth=2;ctx.strokeRect(d.x-9,d.y-9,18,18);ctx.fillStyle='#ffedaa';ctx.font='9px Arial';ctx.fillText('📦',d.x-7,d.y+4)}else {ctx.fillStyle='#8bd0d01b';ctx.fillRect(d.x,d.y,4,2)}}
+ ctx.restore()}
+function drawCar(c){const p=view(c.x,c.y);if(p.x< -90||p.x>sw+90||p.y<-90||p.y>sh+90)return;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(c.ang);ctx.fillStyle='#0008';rounded(-34,-15,80,40,10);ctx.fill();ctx.shadowBlur=c.active?22:8;ctx.shadowColor=c.col;ctx.fillStyle=c.col;rounded(-39,-19,78,38,10);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#122c3c';rounded(-17,-15,27,30,6);ctx.fill();ctx.fillStyle='#09202e';ctx.fillRect(18,-13,13,26);ctx.fillStyle='#ffe2b9';ctx.fillRect(32,-14,6,9);ctx.fillRect(32,5,6,9);ctx.fillStyle='#fc7171';ctx.fillRect(-39,-13,6,8);ctx.fillRect(-39,5,6,8);ctx.fillStyle='#0a0c10';ctx.fillRect(-20,-24,19,5);ctx.fillRect(-20,19,19,5);ctx.restore()}
+function drawActor(a){if(a.dead>0)return;const p=view(a.x,a.y);if(p.x< -55||p.x>sw+55||p.y<-55||p.y>sh+55)return;
+ if(a===aimTarget){ctx.strokeStyle='#ffeba4';ctx.lineWidth=1.9;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(p.x,p.y,31+Math.sin(timePassed*6)*2,0,7);ctx.stroke();ctx.setLineDash([])}
+ ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle='#0009';ctx.beginPath();ctx.ellipse(4,10,16,9,0,0,7);ctx.fill();ctx.rotate(a.ang);
+ ctx.fillStyle='#0c1b25';ctx.fillRect(-7,-14,14,8);ctx.fillRect(-7,6,14,8);ctx.fillStyle=a.team===0?'#36aab4':'#be4a60';rounded(-13,-11,26,22,7);ctx.fill();ctx.strokeStyle=a.team===0?'#89f5e7':'#ff8692';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle=a===player?'#f8d59a':'#d9c1a4';ctx.beginPath();ctx.arc(9,0,8,0,7);ctx.fill();ctx.fillStyle='#131f29';ctx.beginPath();ctx.arc(7,-1,8,Math.PI,6.1);ctx.fill();ctx.fillStyle='#0e1b24';ctx.fillRect(6,-5,26,10);ctx.fillStyle=a.team===0?'#8beeee':'#ff878e';ctx.fillRect(23,-3,6,6);
+ ctx.restore();ctx.font='bold 10px Arial';ctx.textAlign='center';ctx.fillStyle='#0009';ctx.fillRect(p.x-21,p.y-34,42,5);ctx.fillStyle=a.team===0?'#72f8ea':'#ff8589';ctx.fillRect(p.x-21,p.y-34,42*(a.hp/a.maxHp),5);if(a===player){ctx.fillStyle='#ffe1a5';ctx.font='bold 12px Arial';ctx.fillText('♛',p.x,p.y-39)}}
+function drawDog(){if(!dog||player.inCar)return;const p=view(dog.x,dog.y);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(dog.ang);ctx.fillStyle='#0009';ctx.beginPath();ctx.ellipse(3,6,19,10,0,0,7);ctx.fill();ctx.fillStyle='#96704e';ctx.beginPath();ctx.ellipse(0,0,19,12,0,0,7);ctx.fill();ctx.fillStyle='#2d2925';ctx.fillRect(-11,-14,7,10);ctx.fillRect(-11,4,7,10);ctx.fillStyle='#b99360';ctx.beginPath();ctx.arc(17,0,10,0,7);ctx.fill();ctx.fillStyle='#29201d';ctx.beginPath();ctx.moveTo(17,-6);ctx.lineTo(12,-17);ctx.lineTo(23,-8);ctx.moveTo(17,6);ctx.lineTo(12,17);ctx.lineTo(23,8);ctx.fill();ctx.fillStyle='#141414';ctx.beginPath();ctx.arc(27,1,3,0,7);ctx.fill();ctx.fillStyle='#60e9d7';ctx.fillRect(3,-12,5,24);ctx.restore();ctx.textAlign='center';ctx.font='bold 10px Arial';ctx.fillStyle='#a6f3dc';ctx.fillText('🐕 '+save.dogName,p.x,p.y-21)}
+function render(){if(!playing){drawCity();for(const c of cars)drawCar(c);return}ctx.clearRect(0,0,sw,sh);drawCity();for(const c of cars)drawCar(c);for(const a of actors)if(a!==player)drawActor(a);if(!player.inCar)drawActor(player);drawDog();
+ for(const b of bullets){const p=view(b.x,b.y),q=view(b.lastX,b.lastY);ctx.strokeStyle=b.team===0?'#8df8f0':'#ff9477';ctx.lineWidth=3;ctx.shadowBlur=11;ctx.shadowColor=ctx.strokeStyle;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();ctx.shadowBlur=0}
+ for(const p of particles){const pp=view(p.x,p.y);ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(pp.x,pp.y,p.r,0,7);ctx.fill()}ctx.globalAlpha=1;
+ // contextual indicators
+ let f=nearFeature('casino')||nearFeature('house')||nearFeature('armory');if(f){ctx.textAlign='center';ctx.font='bold 12px Arial';ctx.fillStyle='#ffe8a6';ctx.fillText(f.casino?'💎 קזינו • לחץ פעולה':f.house?'🏠 הבית שלך • לחץ פעולה':'🔫 נשקייה • לחץ פעולה',sw/2,sh*.66)}
+ drawMini()}
+function drawMini(){let w=mini.width,h=mini.height;mc.clearRect(0,0,w,h);mc.fillStyle='#10212e';mc.fillRect(0,0,w,h);let sx=w/WORLD.w,sy=h/WORLD.h;mc.fillStyle='#273642';for(let x of vRoads)mc.fillRect((x-roadW/2)*sx,0,roadW*sx,h);for(let y of hRoads)mc.fillRect(0,(y-roadW/2)*sy,w,roadW*sy);for(let b of structures){mc.fillStyle=b.casino?'#b572a6':b.house?'#6bcacf':'#344857';mc.fillRect(b.x*sx,b.y*sy,Math.max(1,b.w*sx),Math.max(1,b.h*sy))}for(let a of actors){if(a.dead>0)continue;mc.beginPath();mc.arc(a.x*sx,a.y*sy,a===player?5:3,0,7);mc.fillStyle=a===player?'#ffe1a1':a.team===0?'#48e6d4':'#ff5e73';mc.fill()}if(dog){mc.fillStyle='#ecb876';mc.fillRect(dog.x*sx-2,dog.y*sy-2,4,4)}mc.strokeStyle='#ffffff60';mc.strokeRect((cam.x-sw/2)*sx,(cam.y-sh/2)*sy,sw*sx,sh*sy)}
+function loop(t){const dt=Math.min((t-prev)/1000||.016,.042);prev=t;update(dt);render();requestAnimationFrame(loop)}buildCity();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
